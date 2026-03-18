@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="logo-header.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+<link rel="stylesheet" href="css/style.css">
+
+
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.29/dist/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+
+<style>
+canvas{
+  height:300px !important;
+}
+
+  .input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.input-grid input {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+}
+
+  @media (max-width: 768px) {
+  .input-grid {
+    grid-template-columns: 1fr;
+    }
+  }
+  
+</style>
+
+</head>
+<body>
+
+  <div class="main-header">
+
+<div class="header-left">
+
+<img src="logo-header.png" class="header-logo">
+
+<div class="header-title">
+
+<div class="app-name">WWTP AI Simulator</div>
+
+<div class="app-subtitle">
+Digital Twin – Activated Sludge Platform
+</div>
+
+</div>
+
+</div>
+
+<div class="header-right">
+
+<div class="header-info">
+Version: <span class="version">V14 AI Professional</span>
+</div>
+
+<div class="header-status">
+System: <span class="system-ready">READY</span>
+</div>
+
+
+</div>
+
+</div>
+
+
+  <div class="control-room">
+
+<div class="sidebar">
+<div class="dashboard-buttons">
+
+<button onclick="openTab('simulation')">⚙ simulation</button>
+<button onclick="openTab('operations')">⚙ Operations</button>
+<button onclick="openTab('regulatory')">📋 Regulatory</button>
+<button onclick="openTab('analytics')">📊 Analytics</button>
+<button onclick="openTab('alerts')">🚨 Alerts</button>
+<button onclick="openTab('executive')">📈 Executive</button>
+
+</div>
+  </div>
+    
+  <div class="simulation-toolbar">
+  <button onclick="exportAIReport()">Export AI Report (PDF)</button>
+  <button onclick="runDailySimulation()">Run 24h Simulation</button>
+    <button id="modeButton" onclick="toggleOperationMode()">
+Mode: AUTO
+</button>
+   <button id="runBtn" onclick="runSimulation()">
+Run Simulation
+</button>
+    
+ </div>
+    
+    <!-- Main Content -->
+    <div class="main-panel">
+
+<!-- =================================================== DESIGN PANEL ==================================================================== -->
+<div id="simulation" class="panel active">
+<div id="design" class="content active">
+
+<div class="section">
+
+<h2>Influent & Design Inputs</h2>
+
+<div class="parameter-board">
+
+<div class="param-card">
+<label>Flow (m³/day)</label>
+<input id="flow">
+</div>
+
+<div class="param-card">
+<label>COD (mg/L)</label>
+<input id="cod">
+</div>
+
+<div class="param-card">
+<label>TKN (mg/L)</label>
+<input id="tkn">
+</div>
+
+<div class="param-card">
+<label>Plant NH4 (mg/L)</label>
+<input id="plantNH4">
+</div>
+
+<div class="param-card">
+<label>Temperature (°C)</label>
+<input id="temp">
+</div>
+
+<div class="param-card">
+<label>SRT (days)</label>
+<input id="srt">
+</div>
+
+<div class="param-card">
+<label>Aeration Volume (m³)</label>
+<input id="volume">
+</div>
+
+<div class="param-card">
+<label>Plant MLSS (mg/L)</label>
+<input id="plantMLSS">
+</div>
+
+<div class="param-card">
+<label>Clarifier Area (m²)</label>
+<input id="clarifierArea">
+</div>
+
+<div class="param-card">
+<label>Plant SLR (kg/m²/d)</label>
+<input id="plantSLR">
+</div>
+
+<div class="param-card">
+<label>Number of Clarifiers</label>
+<input id="clarifierNumber">
+</div>
+
+<div class="param-card">
+<label>WAS / RAS TSS (mg/L)</label>
+<input id="xr">
+</div>
+
+<div class="param-card">
+<label>Aerobic Zones</label>
+<input id="zones">
+</div>
+
+<div class="param-card">
+<label>DO Target (mg/L)</label>
+<input id="doTarget">
+</div>
+
+</div>
+
+</div>
+</div>
+</div>
+  
+
+      <!-- ========================================== PROCESS FLOW DIAGRAM ============================================================ -->
+
+<div class="section">
+
+<h2>WWTP Process Flowsheet</h2>
+  <div id="processAlarm" class="process-alarm">
+
+SYSTEM STATUS: NORMAL
+
+</div>
+
+<div class="flowsheet">
+
+<div class="process influent">
+
+<div class="sensor flow-sensor"></div>
+
+<div class="process-title">Influent</div>
+
+<div class="process-value">
+Flow: <span id="fsFlow">--</span> m³/d
+</div>
+
+</div>
+
+<div class="flow-arrow"></div>
+
+<div class="process selector">
+<div class="process-title">Selector</div>
+<div class="process-value">Biological Selection</div>
+</div>
+
+<div class="flow-arrow"></div>
+<div class="process aeration" onclick="openUnitPanel('aeration')">
+
+<div class="bubbles"></div>
+<div class="sensor mlss-sensor"></div>
+<div class="process-title">Aeration Tank</div>
+
+<div class="process-value">
+MLSS: <span id="fsMLSS">--</span><br>
+SRT: <span id="fsSRT">--</span>
+</div>
+
+</div>
+
+<div class="flow-arrow"></div>
+
+<div class="process clarifier">
+
+<div class="clarifier-arm"></div>
+<div class="sensor slr-sensor"></div>
+<div class="process-title">Secondary Clarifier</div>
+
+<div class="process-value">
+SLR: <span id="fsSLR">--</span><br>
+SVI: <span id="fsSVI">--</span>
+</div>
+
+</div>
+</div>
+
+<div class="flow-arrow"></div>
+
+<div class="process effluent">
+<div class="sensor nh4-sensor"></div>
+<div class="process-title">Effluent</div>
+<div class="process-value">
+NH4: <span id="fsNH4">--</span>
+</div>
+</div>
+
+</div>
+
+<div class="flowsheet-return">
+
+<div class="return-line">
+RAS → <span id="fsRAS">--</span> m³/d
+</div>
+
+<div class="waste-line">
+WAS ↓ <span id="fsWAS">--</span> m³/d
+</div>
+
+</div>
+
+</div>
+
+<!-- =================================================== OPERATIONS PANEL ==================================================================== -->
+<div id="operations" class="panel">
+
+    <!-- Plant Health -->
+    <div class="section">
+        <h2>Plant Health Status</h2>
+     <!-- ===== PROCESS GAUGES ===== -->
+
+<div class="gauges-grid">
+
+<div class="gauge-box">
+<div class="gauge-title">MLSS</div>
+<canvas id="gaugeMLSS"></canvas>
+<div class="gauge-value" id="gMLSS">--</div>
+</div>
+
+<div class="gauge-box">
+<div class="gauge-title">NH4 Effluent</div>
+<canvas id="gaugeNH4"></canvas>
+<div class="gauge-value" id="gNH4">--</div>
+</div>
+
+<div class="gauge-box">
+<div class="gauge-title">Energy</div>
+<canvas id="gaugeEnergy"></canvas>
+<div class="gauge-value" id="gEnergy">--</div>
+</div>
+
+</div>
+        <div class="kpi-row">
+            <div class="kpi-card" id="kpiNH4"><h3>NH4 Effluent</h3><p>--</p></div>
+            <div class="kpi-card" id="kpiEnergy"><h3>Energy (kWh/m³)</h3><p>--</p></div>
+            <div class="kpi-card" id="kpiSRT"><h3>SRT (days)</h3><p>--</p></div>
+            <div class="kpi-card" id="kpiMLSS"><h3>MLSS (mg/L)</h3><p>--</p></div>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label><b>Scoring Mode:</b></label>
+            <select id="scoringMode">
+                <option value="balanced">Balanced Mode</option>
+                <option value="compliance">Compliance Priority</option>
+                <option value="energy">Energy Saving Mode</option>
+            </select>
+        </div>
+      <div class="kpi-strip">
+  <div class="kpi-card" id="kpiNH4_new">
+    <div class="kpi-title">NH4</div>
+    <div class="kpi-value">--</div>
+    <div class="kpi-bar"><div class="kpi-fill" id="barNH4"></div></div>
+  </div>
+
+  <div class="kpi-card" id="kpiSRT_new">
+    <div class="kpi-title">SRT</div>
+    <div class="kpi-value">--</div>
+    <div class="kpi-bar"><div class="kpi-fill" id="barSRT"></div></div>
+  </div>
+
+  <div class="kpi-card" id="kpiMLSS_new">
+    <div class="kpi-title">MLSS</div>
+    <div class="kpi-value">--</div>
+    <div class="kpi-bar"><div class="kpi-fill" id="barMLSS"></div></div>
+  </div>
+
+  <div class="kpi-card" id="kpiEnergy_new">
+    <div class="kpi-title">Energy</div>
+    <div class="kpi-value">--</div>
+    <div class="kpi-bar"><div class="kpi-fill" id="barEnergy"></div></div>
+  </div>
+      </div>
+
+        <div id="healthCard" style="
+            padding:20px;
+            border-radius:12px;
+            text-align:center;
+            font-size:22px;
+            font-weight:bold;
+            background-color:#2d3748;
+            color:white;">
+            Health Score: --
+        </div>
+    </div>
+
+       <!--============================== Results ==============================-->
+    <div class="section">
+        <h2>Results</h2>
+        <div id="results">Results will appear here</div>
+    </div>
+
+</div>
+    
+<!-- ===== BIOWIN STYLE RESULTS ===== -->
+
+<div class="biowin-dashboard">
+
+<div class="biowin-card">
+
+<div class="biowin-title">Process Performance</div>
+
+<div class="biowin-row">
+<span>MLSS</span>
+<div class="biowin-bar">
+<div id="barMLSSbio" class="biowin-fill"></div>
+</div>
+<span id="bioMLSS">--</span>
+</div>
+
+<div class="biowin-row">
+<span>SRT</span>
+<div class="biowin-bar">
+<div id="barSRTbio" class="biowin-fill"></div>
+</div>
+<span id="bioSRT">--</span>
+</div>
+
+<div class="biowin-row">
+<span>F/M</span>
+<div class="biowin-bar">
+<div id="barFMbio" class="biowin-fill"></div>
+</div>
+<span id="bioFM">--</span>
+</div>
+
+</div>
+
+<div class="biowin-card">
+
+<div class="biowin-title">Effluent Quality</div>
+
+<div class="biowin-row">
+<span>NH4</span>
+<div class="biowin-bar">
+<div id="barNH4bio" class="biowin-fill"></div>
+</div>
+<span id="bioNH4">--</span>
+</div>
+
+<div class="biowin-row">
+<span>Energy</span>
+<div class="biowin-bar">
+<div id="barEnergybio" class="biowin-fill"></div>
+</div>
+<span id="bioEnergy">--</span>
+</div>
+
+</div>
+
+</div>
+      <button onclick="runAIAnalysis()">
+AI Advanced Analysis
+</button>
+
+<div id="aiAnalysis" style="margin-top:15px;"></div>
+
+     <h3>Daily Simulation Results</h3>
+
+<table id="dailyResultsTable" class="results-table">
+
+<thead>
+<tr>
+<th>Hour</th>
+<th>Flow</th>
+<th>MLSS</th>
+<th>NH4</th>
+<th>SLR</th>
+</tr>
+</thead>
+<tbody id="dailyResultsBody">
+</tbody>
+
+</table>
+
+      <h3>24h Plant Operation Charts</h3>
+
+<div style="width:100%; height:420px;">
+    <canvas id="dailyChart"></canvas>
+</div>
+
+      <div class="panelBox">
+
+<h3>Digital Twin Calibration</h3>
+
+<table class="resultTable">
+
+<tr>
+<td>NH4 Calibration Factor</td>
+<td id="calNH4factor">1.00</td>
+</tr>
+
+<tr>
+<td>MLSS Calibration Factor</td>
+<td id="calMLSSfactor">1.00</td>
+</tr>
+
+<tr>
+<td>SLR Calibration Factor</td>
+<td id="calSLRfactor">1.00</td>
+</tr>
+
+<tr>
+<td>Model Accuracy</td>
+<td id="modelAccuracy">--</td>
+</tr>
+
+</table>
+
+</div>
+
+      </div>
+
+    <!--============================== AI Control Room ==============================-->
+    <div id="aiControlRoom" class="ai-control-room">
+        <div class="ai-header">
+            <div class="ai-title">WWTP AI Control Room – v12</div>
+            <div class="status-badge status-stable">System Ready</div>
+          <div id="plantStatus" class="ai-status">PLANT STATUS: --</div>
+        </div>
+
+       <div class="ai-dashboard">
+
+<div class="ai-card">
+<div class="ai-card-title">MLSS</div>
+<div class="ai-card-value" id="crMLSS">--</div>
+</div>
+
+<div class="ai-card">
+<div class="ai-card-title">SRT</div>
+<div class="ai-card-value" id="crSRT">--</div>
+</div>
+
+<div class="ai-card">
+<div class="ai-card-title">F/M</div>
+<div class="ai-card-value" id="crFM">--</div>
+</div>
+
+<div class="ai-card">
+<div class="ai-card-title">NH4</div>
+<div class="ai-card-value" id="crNH4">--</div>
+</div>
+
+<div class="ai-card">
+<div class="ai-card-title">Energy</div>
+<div class="ai-card-value" id="crEnergy">--</div>
+</div>
+
+<div class="ai-card">
+<div class="ai-card-title">Health</div>
+<div class="ai-card-value" id="crHealth">--</div>
+</div>
+
+<div class="ai-card">
+<div class="ai-card-title">Simulation Time</div>
+<div class="ai-card-value" id="simHour">00:00</div>
+</div>
+         
+<div class="ai-card">
+<div class="ai-card-title">Process Safety</div>
+<div class="ai-card-value" id="crSafety">--</div>
+</div>
+
+<div class="ai-card">
+<div class="ai-card-title">Clarifier Utilization</div>
+<div class="ai-card-value" id="crFlux">--</div>
+</div>
+
+<div class="ai-section">AI 24h Prediction</div>
+
+<div class="ai-card">
+<div class="ai-card-title">Predicted NH4</div>
+<div class="ai-card-value" id="predNH4">--</div>
+</div>
+
+<div class="ai-card">
+<div class="ai-card-title">Predicted MLSS</div>
+<div class="ai-card-value" id="predMLSS">--</div>
+</div>
+
+<div class="ai-card">
+<div class="ai-card-title">Predicted Clarifier Load</div>
+<div class="ai-card-value" id="predSLR">--</div>
+</div>
+
+<div class="ai-section">Operator Scenario</div>
+
+<div>
+WAS (m³/d)<br>
+<input id="testWAS" class="ai-input">
+</div>
+
+<div>
+RAS Ratio<br>
+<input id="testRAS" class="ai-input" step="0.1">
+</div>
+
+<div>
+<br>
+<button class="ai-button" onclick="runScenario()">Run Scenario</button>
+</div>
+
+<div class="ai-section">Scenario Results</div>
+
+<div class="ai-card">
+<div class="ai-card-title">MLSS</div>
+<div class="ai-card-value" id="scMLSS">--</div>
+</div>
+
+<div class="ai-card">
+<div class="ai-card-title">SRT</div>
+<div class="ai-card-value" id="scSRT">--</div>
+</div>
+
+<div class="ai-card">
+<div class="ai-card-title">F/M</div>
+<div class="ai-card-value" id="scFM">--</div>
+</div>
+
+<div class="ai-card">
+<div class="ai-card-title">NH4</div>
+<div class="ai-card-value" id="scNH4">--</div>
+</div>
+
+<div class="ai-card">
+<div class="ai-card-title">Clarifier Load</div>
+<div class="ai-card-value" id="scSLR">--</div>
+</div>
+
+<div class="ai-card">
+<div class="ai-card-title">Plant Status</div>
+<div class="ai-card-value" id="scPlantStatus">--</div>
+</div>
+
+</div>
+      
+      
+    <div class="panelBox">
+
+<h3>Digital Twin Calibration</h3>
+
+<label>NH4 Factor</label>
+<input type="number" id="calNH4" value="1" step="0.01">
+
+<label>MLSS Factor</label>
+<input type="number" id="calMLSS" value="1" step="0.01">
+
+<label>SLR Factor</label>
+<input type="number" id="calSLR" value="1" step="0.01">
+
+<button onclick="applyCalibration()">Apply Calibration</button>
+
+</div>
+      
+   <!-- ============================== NH4 Profile ============================== -->
+
+      
+    <div class="section">
+        <h2>NH4 Profile</h2>
+        <div style="height:420px;width:100%;">
+<div class="chart-container">
+    <canvas id="nh4Chart"></canvas>
+</div>
+    </div>
+
+    <!--============================== AI Report ==============================-->
+      
+    <div class="section">
+        <h2>AI Engineering Report</h2>
+       <button onclick="exportAIReport()" class="btn-export">
+Export AI Report (PDF)
+</button>
+       
+        <div id="aiFullReportBox">
+            Report will be generated after simulation
+        </div>
+    </div>
+
+</div>
+
+<!-- =================================================== ANALYTICS PANEL ==================================================================== -->
+<div id="analytics" class="panel">
+    <div class="section">
+        <h2>Advanced Performance</h2>
+        <div id="analysisAdvancedBox">
+            Advanced KPIs will appear here
+        </div>
+    </div>
+</div>
+
+<!-- =================================================== REGULATORY PANEL ==================================================================== -->
+<div id="regulatory" class="panel">
+    <div class="section">
+        <h2>Compare</h2>
+        <div id="compare"></div>
+    </div>
+</div>
+
+<!-- =================================================== ALERTS PANEL ==================================================================== -->
+<div id="alerts" class="panel">
+    <div class="section">
+        <h2>Process Alerts</h2>
+        <div id="alertsBoxPanel">Alerts will appear here</div>
+    </div>
+</div>
+
+      <div id="executive" class="panel">
+  <div class="section">
+    <h2>Executive Control Dashboard</h2>
+
+    <div style="height:300px;">
+        <canvas id="stabilityChart"></canvas>
+    </div>
+
+    <div style="height:300px; margin-top:20px;">
+        <canvas id="energyChart"></canvas>
+    </div>
+
+    <div style="height:480px; margin-top:40px;">
+    <canvas id="riskRadarChart"></canvas>
+    </div>
+
+    <div style="height:300px; margin-top:20px;">
+        <canvas id="predictionChart"></canvas>
+    </div>
+
+  </div>
+      </div>
+  
+<!--============================================= IMPORTANT: Load JS at bottom ============================================================-->
+      
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="js/main.js"></script>
+  </div> <!-- main-panel -->
+</div> <!-- control-room -->
+<div id="appVersion" class="version-badge"></div>
+  
+  <!-- ================= UNIT CONTROL PANEL ========================= -->
+
+
+<div id="unitPanel" class="unit-panel">
+
+<div class="unit-panel-content">
+
+<div class="unit-header">
+
+<span id="unitTitle">Unit Details</span>
+
+<button onclick="closeUnitPanel()">X</button>
+
+</div>
+
+<div class="unit-body">
+
+<table class="unit-table">
+
+<tr>
+<td>MLSS</td>
+<td id="panelMLSS">--</td>
+</tr>
+
+<tr>
+<td>SRT</td>
+<td id="panelSRT">--</td>
+</tr>
+
+<tr>
+<td>F/M</td>
+<td id="panelFM">--</td>
+</tr>
+
+<tr>
+<td>NH4 Effluent</td>
+<td id="panelNH4">--</td>
+</tr>
+
+<tr>
+<td>Energy</td>
+<td id="panelEnergy">--</td>
+</tr>
+
+</table>
+
+  <div class="operator-controls">
+
+<h3>Operator Controls</h3>
+
+<label>DO Setpoint</label>
+<input type="number" id="ctrlDO" step="0.1">
+
+<label>WAS Flow (m³/d)</label>
+<input type="number" id="ctrlWAS">
+
+<label>RAS Ratio</label>
+<input type="number" id="ctrlRAS" step="0.1">
+
+<button onclick="applyOperatorControl()">
+
+Apply Control
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+  
+</body>
+</html>
