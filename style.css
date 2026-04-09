@@ -87,3 +87,47 @@ input, select {
   border: 1px solid #334155;
   color: white;
 }
+
+.section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.card {
+  background: #020617;
+  border: 1px solid #1e293b;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.card h4 {
+  margin-bottom: 8px;
+  color: #38bdf8;
+  font-size: 13px;
+}
+
+.card input,
+.card select {
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 6px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  color: white;
+  border-radius: 4px;
+}
+
+.run-btn {
+  margin-top: 15px;
+  width: 100%;
+  padding: 12px;
+  background: #0ea5e9;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.run-btn:hover {
+  background: #0284c7;
+}
