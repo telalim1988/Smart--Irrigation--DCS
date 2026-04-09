@@ -43,8 +43,40 @@ let flow_m3s = flow / 3600;
 // 🔹 حساب القطر
 let diameter = Math.sqrt((4 * flow_m3s) / (Math.PI * velocity));
 
+  // 🔹 قراءة البيانات
+let length = parseFloat(document.getElementById("length").value);
+let elevation = parseFloat(document.getElementById("elevation").value);
+let material = document.getElementById("material").value;
+
+// 🔴 تحقق
+if (isNaN(length) || isNaN(elevation)) {
+  alert("⚠️ Enter pipe length and elevation");
+  return;
+}
+
+// 🔹 تحديد C حسب المادة
+let C;
+
+if (material === "pvc") {
+  C = 150;
+} else if (material === "hdpe") {
+  C = 140;
+} else if (material === "steel") {
+  C = 120;
+}
+
+// 🔹 حساب Head Loss
+let hf = 10.67 * length * Math.pow(flow_m3s, 1.852) /
+         (Math.pow(C, 1.852) * Math.pow(diameter, 4.87));
+
+// 🔹 حساب TDH
+let tdh = hf + elevation;
+
+
 // 🔹 عرض النتائج
 document.querySelectorAll(".box span")[0].innerText = flow.toFixed(2);
 document.querySelectorAll(".box span")[4].innerText = diameter.toFixed(3);
+document.querySelectorAll(".box span")[1].innerText = hf.toFixed(2);
+document.querySelectorAll(".box span")[2].innerText = tdh.toFixed(2);
 
 }
