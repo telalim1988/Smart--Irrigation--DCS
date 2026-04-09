@@ -29,7 +29,22 @@ function calculate() {
 
   let flow = volume / hours;
 
-  // 🔹 عرض النتيجة
-  document.querySelectorAll(".box span")[0].innerText = flow.toFixed(2);
+  // 🔹 قراءة السرعة
+let velocity = parseFloat(document.getElementById("velocity").value);
+
+if (isNaN(velocity)) {
+  alert("⚠️ Enter velocity");
+  return;
+}
+
+// 🔹 تحويل Flow من m³/hr إلى m³/s
+let flow_m3s = flow / 3600;
+
+// 🔹 حساب القطر
+let diameter = Math.sqrt((4 * flow_m3s) / (Math.PI * velocity));
+
+// 🔹 عرض النتائج
+document.querySelectorAll(".box span")[0].innerText = flow.toFixed(2);
+document.querySelectorAll(".box span")[4].innerText = diameter.toFixed(3);
 
 }
