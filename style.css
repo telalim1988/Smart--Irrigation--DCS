@@ -23,11 +23,11 @@ body {
   font-family: Arial;
 }
 
-/* GRID LAYOUT */
+/* MAIN GRID */
 .container {
   display: grid;
-  grid-template-columns: 300px 1fr 300px;
-  height: calc(100vh - 80px);
+  grid-template-columns: 320px 1fr 320px;
+  height: calc(100vh - 70px);
 }
 
 /* PANELS */
@@ -37,9 +37,9 @@ body {
   overflow-y: auto;
 }
 
-/* REMOVE EXTRA WIDTHS */
+/* REMOVE ANY WIDTHS */
 .left, .center, .right {
-  width: 100%;
+  width: auto !important;
 }
 
 .box {
