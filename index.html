@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Smart-Irrigation-Designer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <h1>AquaDesign AI</h1>
+  <p>Smart Irrigation System Design</p>
+</header>
+
+<div class="container">
+
+  <div class="sidebar">
+    <h3>Inputs</h3>
+
+    <label>System Type</label>
+    <select id="system">
+      <option value="drip">Drip</option>
+      <option value="sprinkler">Sprinkler</option>
+    </select>
+
+    <label>Area (m²)</label>
+    <input id="area" type="number">
+
+    <label>ET0</label>
+    <input id="et0" type="number">
+
+    <label>Kc</label>
+    <input id="kc" type="number">
+
+    <label>Pipe Length (m)</label>
+    <input id="length" type="number">
+
+    <label>Elevation (m)</label>
+    <input id="elevation" type="number">
+
+    <label>Material</label>
+    <select id="material">
+      <option value="pvc">PVC</option>
+      <option value="hdpe">HDPE</option>
+      <option value="steel">Steel</option>
+    </select>
+
+    <button onclick="calculate()">Run Design</button>
+  </div>
+
+  <div class="main">
+    <h2>Results</h2>
+    <div id="results"></div>
+  </div>
+
+</div>
+
+<script src="main.js"></script>
+
+</body>
+</html>
