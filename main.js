@@ -106,7 +106,7 @@ let power_kw = (power_watt / efficiency_pump) / 1000;
   // نبدأ برسالة افتراضية
 let alertMessage = "OK";
 
-// 🔴 Velocity Check
+// 🔴 Velocity
 if (velocity < 0.6) {
   alertMessage = "⚠️ Low Velocity";
 }
@@ -115,13 +115,19 @@ if (velocity > 2) {
   alertMessage = "⚠️ High Velocity";
 }
 
-// 🔴 Diameter Check
+// 🔴 Diameter
 if (diameter < 0.02) {
-  alertMessage = "⚠️ Pipe Diameter Too Small";
+  alertMessage = "⚠️ Pipe Too Small";
 }
 
+// 🔴 Head Loss Ratio
+let hf_ratio = hf / tdh;
 
-  
+if (hf_ratio > 0.5) {
+  alertMessage = "❌ High Head Loss";
+} else if (hf_ratio > 0.3) {
+  alertMessage = "⚠️ Moderate Head Loss";
+}
 
 
 // 🔹 عرض النتائج
