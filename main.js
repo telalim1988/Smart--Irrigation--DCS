@@ -50,9 +50,6 @@ if (isNaN(velocity)) {
   return;
 }
 
-// 🔹 تحويل Flow من m³/hr إلى m³/s
-let flow_m3s = flow / 3600;
-
 // 🔹 حساب القطر
 let diameter = Math.sqrt((4 * flow_m3s) / (Math.PI * velocity));
 
