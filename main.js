@@ -149,8 +149,8 @@ if (pump_head === null) {
 }
   
 document.getElementById("pump_head").innerText = 
-  pump_head ? pump_head.toFixed(2) : "Out";
-
+  (pump_head !== null) ? pump_head.toFixed(2) : "Out";
+  
 document.getElementById("pump_status").innerText = pump_status;
 
 // 🔹 حساب عدد النقاط
