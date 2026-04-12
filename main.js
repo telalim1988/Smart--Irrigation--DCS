@@ -201,10 +201,6 @@ for (let v of velocities) {
   }
 }
 
-// 🔹 عرض النتائج
-document.getElementById("opt_velocity").innerText = best_velocity.toFixed(2);
-document.getElementById("opt_diameter").innerText = best_diameter.toFixed(3);
-
   
 // 🔹 عرض النتائج
 document.querySelectorAll(".box span")[0].innerText = flow_zone.toFixed(2);
@@ -215,4 +211,6 @@ document.querySelectorAll(".box span")[4].innerText = diameter.toFixed(3);
 document.getElementById("std_diameter").innerText = std_diameter.toFixed(3);
 document.getElementById("alerts").innerText = alertMessage;
 document.getElementById("recommendation").innerText = recommendation;
+document.getElementById("opt_velocity").innerText = best_velocity.toFixed(2);
+document.getElementById("opt_diameter").innerText = best_diameter.toFixed(3);
 }
