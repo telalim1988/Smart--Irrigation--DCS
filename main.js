@@ -308,6 +308,11 @@ document.getElementById("pump_select").innerText =
 
 document.getElementById("pump_flow").innerText = flow_pump.toFixed(2);
 
+document.getElementById("pump_head").innerText = 
+  pump_head ? pump_head.toFixed(2) : "Out";
+
+document.getElementById("pump_status").innerText = pump_status;
+
 
 function interpolateHead(flow, curve) {
 
