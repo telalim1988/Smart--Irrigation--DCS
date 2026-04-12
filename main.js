@@ -382,7 +382,7 @@ window.chart = new Chart(ctx, {
         data: curve_head,
         borderWidth: 3,
         tension: 0.4,
-        fill: false
+        fill: false,
         borderColor: "orange"
       },
       {
