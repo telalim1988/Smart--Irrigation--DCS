@@ -378,36 +378,47 @@ window.chart = new Chart(ctx, {
   type: "line",
   data: {
     labels: curve_flow,
-    datasets: [
-      {
-        label: "Pump Curve",
-        data: curve_head,
-        fill: false,
-        tension: 0.3
-      },
-      {
-        label: "Operating Point",
-        data: [{
-          x: flow_pump,
-          y: tdh
-        }],
-        type: "scatter",
-        pointRadius: 6
-      }
-    ]
+   datasets: [
+  {
+    label: "Pump Curve",
+    data: curve_head,
+    borderWidth: 3,
+    tension: 0.4,
+    fill: false
   },
+  {
+    label: "System Curve",
+    data: system_curve,
+    borderDash: [5, 5],
+    borderWidth: 2,
+    fill: false
+  },
+  {
+    label: "Operating Point",
+    data: [{
+      x: flow_pump,
+      y: tdh
+    }],
+    type: "scatter",
+    pointRadius: 6,
+    pointBackgroundColor: "red"
+  }
+]
   options: {
-    scales: {
-      x: {
-        title: { display: true, text: "Flow (m³/hr)" }
-      },
-      y: {
-        title: { display: true, text: "Head (m)" }
-      }
+   scales: {
+  x: {
+    title: {
+      display: true,
+      text: "Flow (m³/hr)"
+    }
+  },
+  y: {
+    title: {
+      display: true,
+      text: "Head (m)"
     }
   }
-});
-  
+}
   
 // 🔹 عرض النتائج
 document.getElementById("flow_rate").innerText = flow_zone.toFixed(2);
