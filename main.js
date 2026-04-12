@@ -327,6 +327,9 @@ if (typeof std_d === "undefined") {
   console.error("std_d NOT DEFINED");
 }
 
+let intersection_flow = 0;
+let intersection_head = 0;
+let min_diff = Infinity;
 
   // =========================
 // 🔹 PUMP CURVE GRAPH
@@ -358,18 +361,45 @@ for (let q of curve_flow) {
 
   system_curve.push(h_system);
 }
+
+  // =========================
+// 🔹 FIND INTERSECTION
+// =========================
+
+let intersection_flow = 0;
+let intersection_head = 0;
+let min_diff = Infinity;
+
+for (let i = 0; i < curve_flow.length; i++) {
+
+  let hp = curve_head[i];
+  let hs = system_curve[i];
+
+  let diff = Math.abs(hp - hs);
+
+  if (diff < min_diff) {
+    min_diff = diff;
+    intersection_flow = curve_flow[i];
+    intersection_head = hp;
+  }
+}
   
 // نقطة التشغيل
 let operating_point = {
-  x: flow_pump,
-  y: tdh
+  x: intersection_flow,
+y: intersection_head
 };
 
 // حذف الرسم القديم (مهم)
 if (window.chart) {
   window.chart.destroy();
 }
+// =========================
+// 🔹 UPDATE REAL VALUES
+// =========================
 
+flow_pump = intersection_flow;
+tdh = intersection_head;
 // رسم جديد
 window.chart = new Chart(ctx, {
   type: "line",
