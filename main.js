@@ -280,3 +280,5 @@ document.getElementById("pump_select").innerText =
   " m³/hr | Head: " + best_pump.head + " m";
 
 }
+
+document.getElementById("pump_flow").innerText = flow_pump.toFixed(2);
