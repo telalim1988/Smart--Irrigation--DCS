@@ -383,6 +383,7 @@ window.chart = new Chart(ctx, {
         borderWidth: 3,
         tension: 0.4,
         fill: false
+        borderColor: "orange"
       },
       {
         label: "System Curve",
