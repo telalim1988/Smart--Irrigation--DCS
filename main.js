@@ -328,6 +328,62 @@ if (typeof std_d === "undefined") {
 }
 
 
+  // =========================
+// 🔹 PUMP CURVE GRAPH
+// =========================
+
+let ctx = document.getElementById("pumpChart").getContext("2d");
+
+// تجهيز بيانات المنحنى
+let curve_flow = pump_curve.map(p => p.flow);
+let curve_head = pump_curve.map(p => p.head);
+
+// نقطة التشغيل
+let operating_point = {
+  x: flow_pump,
+  y: tdh
+};
+
+// حذف الرسم القديم (مهم)
+if (window.chart) {
+  window.chart.destroy();
+}
+
+// رسم جديد
+window.chart = new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: curve_flow,
+    datasets: [
+      {
+        label: "Pump Curve",
+        data: curve_head,
+        fill: false,
+        tension: 0.3
+      },
+      {
+        label: "Operating Point",
+        data: [{
+          x: flow_pump,
+          y: tdh
+        }],
+        type: "scatter",
+        pointRadius: 6
+      }
+    ]
+  },
+  options: {
+    scales: {
+      x: {
+        title: { display: true, text: "Flow (m³/hr)" }
+      },
+      y: {
+        title: { display: true, text: "Head (m)" }
+      }
+    }
+  }
+});
+  
   
 // 🔹 عرض النتائج
 document.getElementById("flow_rate").innerText = flow_zone.toFixed(2);
