@@ -202,6 +202,23 @@ for (let v of velocities) {
 }
 
   
+// 🔹 نستخدم القيم المحسوبة
+let flow_req = flow_zone; // m³/hr
+let head_req = tdh_std;   // الأفضل استخدام optimized
+
+let pump_type = "";
+
+// 🔹 تصنيف بسيط للمضخات
+if (head_req < 10) {
+  pump_type = "Low Head Pump (Horizontal)";
+} else if (head_req < 30) {
+  pump_type = "Centrifugal Pump";
+} else {
+  pump_type = "High Head Multistage Pump";
+}
+
+
+  
 // 🔹 عرض النتائج
 document.querySelectorAll(".box span")[0].innerText = flow_zone.toFixed(2);
 document.querySelectorAll(".box span")[1].innerText = hf_std.toFixed(2);
@@ -213,4 +230,7 @@ document.getElementById("alerts").innerText = alertMessage;
 document.getElementById("recommendation").innerText = recommendation;
 document.getElementById("opt_velocity").innerText = best_velocity.toFixed(2);
 document.getElementById("opt_diameter").innerText = best_diameter.toFixed(3);
+document.getElementById("pump_select").innerText =
+  pump_type + " | Flow: " + flow_req.toFixed(2) +
+  " m³/hr | Head: " + head_req.toFixed(2) + " m";
 }
