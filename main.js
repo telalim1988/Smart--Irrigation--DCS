@@ -2,10 +2,10 @@
 let pump_curve = [
   { flow: 0, head: 14 },
   { flow: 2, head: 13 },
-  { flow: 4, head: 12 },
-  { flow: 6, head: 10 },
-  { flow: 8, head: 7 },
-  { flow: 10, head: 3 }
+  { flow: 4, head: 11 },
+  { flow: 6, head: 9 },
+  { flow: 8, head: 6 },
+  { flow: 10, head: 2 }
 ];
 
 
