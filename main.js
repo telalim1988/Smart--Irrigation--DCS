@@ -227,7 +227,7 @@ if (hf_ratio > 0.5) {
 let velocities = [0.6, 0.8, 1.0, 1.2, 1.5];
 
 let best_velocity = velocity;
-let best_diameter = diameter;
+let best_diameter = std_diameter;
 let min_hf = hf;
 
 // 🔹 نجرب كل السرعات
@@ -308,10 +308,9 @@ document.getElementById("pump_status").innerText = pump_status;
 
 document.getElementById("power").innerText = power_kw.toFixed(3);
 
-document.getElementById("diameter").innerText = std_d.toFixed(3);
+document.getElementById("diameter").innerText = std_diameter.toFixed(3);
 
-
-document.getElementById("std_diameter").innerText = std_d.toFixed(3);
+document.getElementById("std_diameter").innerText = std_diameter.toFixed(3);
 
 document.getElementById("opt_velocity").innerText = best_velocity.toFixed(2);
 document.getElementById("opt_diameter").innerText = best_diameter.toFixed(3);
