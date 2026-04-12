@@ -254,7 +254,7 @@ for (let v of velocities) {
 
   
 // 🔹 نستخدم القيم المحسوبة
-let flow_req = flow_zone; // m³/hr
+let flow_req = flow_pump; // m³/hr
 let head_req = tdh_std;   // الأفضل استخدام optimized
 
 let pump_type = "";
